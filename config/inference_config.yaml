@@ -1,0 +1,32 @@
+# Inference Configuration
+inference:
+  model_path: models/checkpoints/best_model.pt
+  device: auto  # auto, cpu, cuda
+  precision: fp32  # fp32, fp16
+
+# Decoding
+decoding:
+  type: greedy  # greedy, beam_search, beam_search_lm
+  beam_width: 20
+  lm_path: null  # path to KenLM .arpa file
+  lm_alpha: 0.5  # LM weight
+  lm_beta: 1.0   # word bonus
+
+# Features (must match training)
+features:
+  type: log_mel
+  sample_rate: 16000
+  n_mels: 80
+  n_fft: 512
+  win_length: 400
+  hop_length: 160
+  f_min: 20.0
+  f_max: 8000.0
+  normalize: true
+
+# API
+api:
+  host: 0.0.0.0
+  port: 8000
+  max_audio_duration: 60.0  # seconds
+  allowed_formats: [wav, flac, mp3, ogg]

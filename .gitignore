@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Data (large files - download separately)
+data/raw/
+data/processed/
+data/lm/
+
+# Model checkpoints & exports (large files)
+models/checkpoints/*.pt
+models/exported/*.onnx
+models/exported/*.onnx.data
+models/pretrained/
+
+# Generated manifests (regenerate with prepare_data.py)
+data/manifests/*.json
+
+# Logs
+logs/
+*.log
+wandb/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/*.ipynb
+
+# Keep directory structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/lm/.gitkeep
+!data/manifests/.gitkeep
+!models/checkpoints/.gitkeep
+!models/exported/.gitkeep
+!models/pretrained/.gitkeep
+!notebooks/.gitkeep

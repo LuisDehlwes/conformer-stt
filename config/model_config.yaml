@@ -1,0 +1,36 @@
+# Model Configuration
+model:
+  type: conformer_ctc
+  encoder:
+    num_layers: 12
+    d_model: 256
+    num_heads: 4
+    feed_forward_dim: 1024
+    conv_kernel_size: 31
+    dropout: 0.1
+    input_dim: 80  # Mel bins
+    subsampling_factor: 4
+    subsampling_conv_channels: 256
+  decoder:
+    type: ctc  # ctc, attention, hybrid
+    vocab_size: 29  # 26 letters + space + apostrophe + blank
+    blank_id: 0
+
+# Feature Extraction
+features:
+  type: log_mel
+  sample_rate: 16000
+  n_mels: 80
+  n_fft: 512
+  win_length: 400    # 25ms at 16kHz
+  hop_length: 160    # 10ms at 16kHz
+  f_min: 20.0
+  f_max: 8000.0
+  normalize: true
+
+# Tokenizer
+tokenizer:
+  type: character  # character or bpe
+  vocab_path: null  # auto-generated for character
+  lowercase: true
+  # Character vocab: <blank> a b c d e f g h i j k l m n o p q r s t u v w x y z ' <space>
