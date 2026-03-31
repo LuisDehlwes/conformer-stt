@@ -20,9 +20,11 @@ conformer-stt/
 ├── config/
 │   ├── model_config.yaml          # Medium model (16 layers, 256 dim, ~26M params)
 │   ├── model_config_large.yaml    # Large model (18 layers, 512 dim, ~117M params)
+│   ├── model_config_xlarge.yaml   # XLarge model (24 layers, 928 dim, ~505M params)
 │   ├── model_config_small.yaml    # Small model for testing (2 layers, 64 dim)
 │   ├── train_config.yaml          # Training config (medium, 2x RTX 6000)
 │   ├── train_config_large.yaml    # Training config (large model)
+│   ├── train_config_xlarge.yaml   # Training config (xlarge model)
 │   ├── train_config_small.yaml    # Quick test training config
 │   └── inference_config.yaml      # Inference & API config
 ├── src/
@@ -107,6 +109,11 @@ python scripts/train.py \
     --model_config config/model_config_large.yaml \
     --train_config config/train_config_large.yaml
 
+# XLarge model (~505M params) on 2x RTX 6000
+python scripts/train.py \
+    --model_config config/model_config_xlarge.yaml \
+    --train_config config/train_config_xlarge.yaml
+
 # Quick test with small model (CPU, minutes)
 python scripts/train.py \
     --model_config config/model_config_small.yaml \
@@ -174,6 +181,7 @@ Audio (16 kHz WAV)
 | `model_config_small.yaml` | 2 | 64 | 4 | ~250K | Testing only |
 | `model_config.yaml` | 16 | 256 | 4 | ~26M | Whisper Base (74M) |
 | `model_config_large.yaml` | 18 | 512 | 8 | ~117M | Whisper Small (244M) |
+| `model_config_xlarge.yaml` | 24 | 928 | 16 | ~505M | Whisper Medium (769M) |
 
 **Whisper comparison (target WER on LibriSpeech test-clean):**
 
@@ -184,6 +192,7 @@ Audio (16 kHz WAV)
 | **Our Medium** | **26M** | **~8-12%** |
 | Whisper Small | 244M | ~3.4% |
 | **Our Large** | **117M** | **~4-7%** |
+| **Our XLarge** | **505M** | **~2.5-4%** |
 | Whisper Medium | 769M | ~2.9% |
 | Whisper Large v3 | 1.5B | ~2.0% |
 
@@ -238,6 +247,18 @@ All 36 tests covering tokenizer, feature extraction, augmentation, model archite
 | RTX 4080 | 16 GB | 16 | ~36h |
 | RTX 6000 | 48 GB | 32 | ~14h |
 | 2× RTX 6000 | 96 GB | 64 | ~8h |
+
+**XLarge model (505M):**
+
+| GPU | VRAM | Batch Size | Est. Time (100h data, 100 epochs) |
+|-----|------|------------|----------------------------------|
+| RTX 4080 | 16 GB | 2 | ~120h+ |
+| RTX 6000 | 48 GB | 8 | ~36h |
+| 2× RTX 6000 | 96 GB | 8 + accum 8 | ~20h |
+
+> **Note:** The XLarge model (505M) benefits significantly from more training data.
+> With only 100h (train-clean-100) it will likely overfit. For best results, use
+> the full 960h LibriSpeech or combine multiple datasets.
 
 ## License
 

@@ -1,0 +1,53 @@
+# Training Configuration - Extra Large model (500M) on 2x RTX 6000 48GB
+# Larger model needs careful tuning: smaller batch, more accumulation, longer warmup
+# Expect ~24-48h for 100 epochs on LibriSpeech train-clean-100
+# For full 960h LibriSpeech: expect several days
+training:
+  epochs: 100
+  batch_size: 8
+  learning_rate: 0.001
+  min_lr: 0.000005
+  warmup_steps: 10000
+  scheduler: cosine_warmup
+  optimizer: adamw
+  weight_decay: 0.0001
+  gradient_clip_norm: 5.0
+  accumulation_steps: 8    # effective batch size = 64
+  mixed_precision: true
+  seed: 42
+
+  # Checkpointing
+  save_every_n_epochs: 5
+  keep_last_n_checkpoints: 3
+  checkpoint_dir: models/checkpoints
+
+  # Logging
+  log_every_n_steps: 25
+  use_wandb: false
+  wandb_project: conformer-stt-xlarge
+
+# Data
+data:
+  train_manifest: data/manifests/train_clean_100.json
+  val_manifest: data/manifests/dev_clean.json
+  test_manifest: data/manifests/test_clean.json
+  max_duration: 16.0    # shorter max to fit in memory
+  min_duration: 0.5
+  num_workers: 8
+  pin_memory: true
+
+# Augmentation (aggressive for 500M model — prevent overfitting)
+augmentation:
+  spec_augment:
+    enabled: true
+    freq_masks: 2
+    freq_mask_width: 30
+    time_masks: 10
+    time_mask_width: 0.05
+  speed_perturb:
+    enabled: true
+    factors: [0.9, 0.95, 1.0, 1.05, 1.1]
+  noise_inject:
+    enabled: false
+    noise_dir: null
+    snr_range: [5, 20]
